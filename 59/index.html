@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задание 59</title>
+    <style>
+        body{
+            font-family: sans-serif;
+            margin: 0;
+        }
+        *, ::after, ::before {
+            box-sizing: border-box;
+        }
+        .container{
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 50px 0;
+        }
+        .search{
+            display: flex;
+            gap: 6px;
+        }
+        .list__element--active{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="search">
+            <input class="search__input" type="text" name="" id="">
+            <button class="search__btn" type="button">Найти</button>
+            <button class="search__clear" type="button">Очистить</button>
+        </div>
+        <ul class="list"></ul>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const words = ['Apple', 'Banana', 'Cherry', 'Date', 'Grape', 'Lemon', 'Orange', 'Peach'];
+
+            const listContainer = document.querySelector('.list');
+            const searchInput = document.querySelector('.search__input');
+            const searchBtn = document.querySelector('.search__btn');
+            const searchClearBtn = document.querySelector('.search__clear');
+
+            function updateList(filteredWords) {
+                listContainer.innerHTML = ''; // Очищаем список
+
+                filteredWords.forEach(word => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = word;
+                    listContainer.appendChild(listItem);
+                });
+            }
+
+            function filterList() {
+                const searchText = searchInput.value.toLowerCase();
+                const filteredWords = words.filter(word => word.toLowerCase().includes(searchText));
+                updateList(filteredWords);
+            }
+
+            function clearSearch() {
+                searchInput.value = '';
+                updateList(words);
+            }
+
+            function toggleActiveClass(event) {
+                const listItem = event.target.closest('li');
+
+                if (listItem) {
+                    listItem.classList.toggle('list__element--active');
+                }
+            }
+
+            // Инициализация списка при загрузке страницы
+            updateList(words);
+
+            // Добавляем события
+            searchBtn.addEventListener('click', filterList);
+            searchClearBtn.addEventListener('click', clearSearch);
+            listContainer.addEventListener('click', toggleActiveClass);
+        });
+
+    </script>
+</body>
+</html>

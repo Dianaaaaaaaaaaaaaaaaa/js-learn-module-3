@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задание 62.2</title>
+    <style>
+        body{
+            font-family: sans-serif;
+            margin: 0;
+        }
+        *, ::after, ::before {
+            box-sizing: border-box;
+        }
+        .container{
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 50px 0;
+        }
+        .grid{
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="grid">
+            <input class="js-input" type="text">
+            <button class="js-button"> Сохранить </button>
+        </div>
+
+        <hr>
+
+        <h1>Ваше имя <span class="js-name"></span></h1>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.querySelector('.js-input');
+            const button = document.querySelector('.js-button');
+            const spanName = document.querySelector('.js-name');
+
+            // При загрузке страницы проверяем, есть ли объект в localStorage
+            const savedData = localStorage.getItem('userData');
+
+            if (savedData) {
+                // Если объект есть, парсим его и выводим имя в span
+                const parsedData = JSON.parse(savedData);
+                spanName.textContent = parsedData.name;
+            }
+
+            // Обработчик события для кнопки "Сохранить"
+            button.addEventListener('click', function () {
+                const enteredName = input.value;
+
+                if (enteredName) {
+                    // Сохраняем объект в localStorage
+                    const userData = { name: enteredName };
+                    localStorage.setItem('userData', JSON.stringify(userData));
+
+                    // Выводим имя в span
+                    spanName.textContent = enteredName;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

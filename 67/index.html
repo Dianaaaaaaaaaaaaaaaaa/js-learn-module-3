@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задание 67</title>
+    <style>
+        body{
+            font-family: sans-serif;
+            margin: 0;
+        }
+        *, ::after, ::before {
+            box-sizing: border-box;
+        }
+        .container{
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 50px 0;
+        }
+        .page__list{
+            margin-top: 20px;
+        }
+        .list{
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .list__message{
+            padding: 5px;
+        }
+        .list--send{
+            background: #8BC34A;
+        }
+        .list--receive{
+            background: #e4e4e4;
+        }
+
+
+    </style>
+</head>
+<body class="page">
+    <div class="container">
+        <div class="send-message">
+            <input type="text" class="js-input">
+            <button class="js-button">Отправить</button>
+        </div>
+        <div class="js-list page__list list">
+            <!-- <div class="list__message list--send">Отправлено: text</div>
+            <div class="list__message list--receive">Получено: text</div> -->
+        </div>
+    </div>
+    <script>
+        const list = document.querySelector('.js-list');
+        const input = document.querySelector('.js-input');
+        const button = document.querySelector('.js-button');
+
+        const url = 'wss://socketsbay.com/wss/v2/1/demo/';
+        const websocket = new WebSocket(url);
+
+        const sendMessage = (text) => {
+            const date = new Date().toLocaleString();
+
+            const sendDiv = document.createElement('div');
+            sendDiv.classList.add('list__message', 'list--send');
+            sendDiv.textContent = `Отправлено: ${text} (${date})`;
+
+            list.prepend(sendDiv);
+
+            websocket.send(text);
+        };
+
+        websocket.onmessage = (event) => {
+            const receivedText = event.data;
+            const date = new Date().toLocaleString();
+
+            const receiveDiv = document.createElement('div');
+            receiveDiv.classList.add('list__message', 'list--receive');
+            receiveDiv.textContent = `Получено: ${receivedText} (${date})`;
+
+            list.prepend(receiveDiv);
+        };
+
+        websocket.onopen = (event) => {
+            console.log(event);
+        };
+
+        websocket.onclose = (event) => {
+            console.log(event);
+        };
+
+        websocket.onerror = (event) => {
+            console.log(event);
+        };
+
+        button.addEventListener('click', () => {
+            const text = input.value.trim();
+
+            if (text) {
+                sendMessage(text);
+                input.value = '';
+            }
+        });
+
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                const text = input.value.trim();
+
+                if (text) {
+                    sendMessage(text);
+                    input.value = '';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
